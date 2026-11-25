@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% set cabecalho = 'Editar nota' if nota else 'Nova nota' %}
+{% block titulo %}{{ cabecalho }}{% endblock %}
+{% block conteudo %}
+<div class="card">
+  <div class="card-body p-4">
+    <h1 class="h4 mb-3">{{ cabecalho }}</h1>
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <label class="form-label" for="titulo">Título</label>
+        <input class="form-control" id="titulo" name="titulo" value="{{ titulo }}" maxlength="150" required autofocus>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="conteudo">Conteúdo</label>
+        <textarea class="form-control" id="conteudo" name="conteudo" rows="10" maxlength="20000" required>
+{{ conteudo }}</textarea>
+      </div>
+      <button class="btn btn-primary" type="submit">Salvar</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('notas.ver', nota_id=nota.id) if nota else url_for('notas.listar') }}">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

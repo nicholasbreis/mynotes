@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}{{ nota.titulo }}{% endblock %}
+{% block conteudo %}
+<article class="card">
+  <div class="card-body p-4">
+    {% if nota.fixada %}<span class="badge text-bg-warning mb-2">Fixada</span>{% endif %}
+    <h1 class="h3 text-break">{{ nota.titulo }}</h1>
+    <p class="small text-secondary">
+      Criada em {{ nota.criada_em.strftime('%d/%m/%Y %H:%M') }} · Atualizada em {{ nota.atualizada_em.strftime('%d/%m/%Y %H:%M') }}
+    </p>
+    <div class="conteudo-nota text-break">{{ nota.conteudo }}</div>
+  </div>
+  <div class="card-footer bg-white d-flex flex-wrap gap-2">
+    <a class="btn btn-outline-secondary" href="{{ url_for('notas.listar') }}">Voltar</a>
+    <a class="btn btn-primary" href="{{ url_for('notas.editar', nota_id=nota.id) }}">Editar</a>
+    <form method="post" action="{{ url_for('notas.fixar', nota_id=nota.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn btn-outline-secondary" type="submit">{{ 'Desafixar' if nota.fixada else 'Fixar' }}</button>
+    </form>
+    <form method="post" action="{{ url_for('notas.excluir', nota_id=nota.id) }}" data-confirmar="Excluir esta nota?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn btn-outline-danger" type="submit">Excluir</button>
+    </form>
+  </div>
+</article>
+{% endblock %}

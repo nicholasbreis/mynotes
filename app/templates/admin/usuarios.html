@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block titulo %}Usuários{% endblock %}
+{% block conteudo %}
+<h1 class="h3 mb-3">Usuários</h1>
+<div class="card">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Situação</th><th>Criado em</th><th>Ações</th></tr>
+      </thead>
+      <tbody>
+        {% for usuario in usuarios %}
+        <tr>
+          <td>{{ usuario.nome }}</td>
+          <td>{{ usuario.email }}</td>
+          <td>{{ usuario.perfil }}</td>
+          <td><span class="badge {{ 'text-bg-success' if usuario.ativo else 'text-bg-danger' }}">{{ 'Ativo' if usuario.ativo else 'Bloqueado' }}</span></td>
+          <td>{{ usuario.criado_em.strftime('%d/%m/%Y') }}</td>
+          <td>
+            {% if usuario.id != g.usuario.id %}
+            <div class="d-flex gap-2">
+              <form method="post" action="{{ url_for('admin.bloquear', usuario_id=usuario.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-sm btn-outline-secondary" type="submit">{{ 'Bloquear' if usuario.ativo else 'Desbloquear' }}</button>
+              </form>
+              <form method="post" action="{{ url_for('admin.excluir', usuario_id=usuario.id) }}" data-confirmar="Excluir este usuário e todas as notas dele?">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-sm btn-outline-danger" type="submit">Excluir</button>
+              </form>
+            </div>
+            {% else %}
+            <span class="text-secondary">Sua conta</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
